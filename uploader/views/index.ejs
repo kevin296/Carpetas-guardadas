@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Uploader</title>
+</head>
+<body>
+  <h1>Subir PDFs</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <label for="username">Nombre de Usuario:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="pdfs">Selecciona PDFs (máximo 10):</label>
+    <input type="file" id="pdfs" name="pdfs" accept="application/pdf" multiple required>
+    <button type="submit">Subir</button>
+  </form>
+
+  <% if (tempFiles.length > 0) { %>
+    <h2>Archivos Subidos Temporalmente</h2>
+    <div>
+      <% tempFiles.forEach(file => { %>
+        <div style="margin-bottom: 10px;">
+          <embed src="/temp/<%= file.username %>/<%= file.filename %>" width="300" height="200" type="application/pdf">
+          <p>Usuario: <%= file.username %></p>
+          <p>Archivo: <%= file.filename %></p>
+        </div>
+      <% }) %>
+    </div>
+    <form action="/move-to-permanent" method="post">
+      <input type="hidden" name="username" value="<%= tempFiles[0].username %>">
+      <button type="submit">Mover a Permanente</button>
+    </form>
+  <% } %>
+</body>
+</html>
